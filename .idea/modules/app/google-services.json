@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "434742085854",
+    "firebase_url": "https://tu-van-tuyen-sinh-b1610701.firebaseio.com",
+    "project_id": "tu-van-tuyen-sinh-b1610701",
+    "storage_bucket": "tu-van-tuyen-sinh-b1610701.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:434742085854:android:2aa13a4243e5599a705a4f",
+        "android_client_info": {
+          "package_name": "com.b1610701.tuvantuyensinh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "434742085854-lp6m176kq438evc0eciecngqp6oihi39.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.b1610701.tuvantuyensinh",
+            "certificate_hash": "26380ece7522915a56aee93d2bb35fac71999d37"
+          }
+        },
+        {
+          "client_id": "434742085854-rj3tpm2ckcaiavm1vivd5hucgol94vp1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkvrPWnNK955BBFeb_JJIL5y6bdezR35Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "434742085854-rj3tpm2ckcaiavm1vivd5hucgol94vp1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

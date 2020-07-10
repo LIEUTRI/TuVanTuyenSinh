@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="?attr/colorPrimaryDark"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:weightSum="3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="bottom"
+        android:background="@drawable/background"
+        android:paddingLeft="10dp"
+        android:paddingBottom="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/profile_layout"
+            android:visibility="invisible">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:id="@+id/profile_image"
+                android:visibility="visible"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="fullname"
+                    android:id="@+id/profile_fullname"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="16sp"
+                    android:autoSizeMaxTextSize="24sp"
+                    android:autoSizeStepGranularity="2sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="username"
+                    android:id="@+id/profile_username"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-light"
+                    android:visibility="visible"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DANH MỤC"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:id="@+id/textViewHeader"
+        android:visibility="visible"
+        android:paddingLeft="10dp"/>
+
+</LinearLayout>
