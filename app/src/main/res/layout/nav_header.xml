@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="?attr/colorPrimaryDark"
@@ -10,12 +11,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="2"
         android:gravity="bottom"
         android:background="@drawable/background"
-        android:paddingLeft="10dp"
-        android:paddingBottom="5dp">
+        android:paddingStart="10dp"
+        android:paddingBottom="5dp"
+        tools:ignore="RtlSymmetry">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,25 +38,19 @@
                     android:layout_height="40dp"
                     android:text="fullname"
                     android:id="@+id/profile_fullname"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:textColor="#fff"
                     android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="16sp"
-                    android:autoSizeMaxTextSize="24sp"
-                    android:autoSizeStepGranularity="2sp"/>
+                    android:textSize="25sp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="username"
                     android:id="@+id/profile_username"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:textColor="#fff"
                     android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-light"
                     android:visibility="visible"/>
             </LinearLayout>

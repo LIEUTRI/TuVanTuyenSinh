@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="wrap_content">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/cntt"
+            android:title="@string/cntt" />
+        <item
+            android:id="@+id/kinhdoanhnongnghiep"
+            android:title="@string/kdnn" />
+        <item
+            android:id="@+id/kinhtenongnghiep"
+            android:title="@string/ktnn" />
+        <item
+            android:id="@+id/kythuatxaydung"
+            android:title="@string/ktxd" />
+        <item
+            android:id="@+id/luathanhchinh"
+            android:title="@string/lhc" />
+        <item
+            android:id="@+id/ngonnguanh"
+            android:title="@string/nna" />
+        <item
+            android:id="@+id/quantrikinhdoanh"
+            android:title="@string/qtkd" />
+        <item
+            android:id="@+id/vietnamhoc"
+            android:title="@string/vnh" />
+    </group>
+</menu>

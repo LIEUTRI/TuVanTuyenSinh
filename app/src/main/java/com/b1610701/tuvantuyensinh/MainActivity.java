@@ -25,11 +25,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,18 +36,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.b1610701.tuvantuyensinh.fragments.CNTTFragment;
 import com.b1610701.tuvantuyensinh.fragments.HomeFragment;
-import com.b1610701.tuvantuyensinh.fragments.SauDaiHocFragment;
-import com.b1610701.tuvantuyensinh.fragments.ThongTinTuyenSinhFragment;
+import com.b1610701.tuvantuyensinh.fragments.KDNNFragment;
+import com.b1610701.tuvantuyensinh.fragments.KTNNFragment;
+import com.b1610701.tuvantuyensinh.fragments.KTXDFragment;
+import com.b1610701.tuvantuyensinh.fragments.LHCFragment;
+import com.b1610701.tuvantuyensinh.fragments.NNAFragment;
+import com.b1610701.tuvantuyensinh.fragments.QTKDFragment;
 import com.b1610701.tuvantuyensinh.fragments.UserFragment;
-import com.b1610701.tuvantuyensinh.fragments.VuaLamVuaHocFragment;
+import com.b1610701.tuvantuyensinh.fragments.VNHFragment;
 import com.b1610701.tuvantuyensinh.model.User;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,8 +62,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Timer;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
     TextView profile_username;
     LinearLayout q_a_layout;
     private String UID;
-    AdapterView<?> adapterView;
     boolean isAdmin = false;
 
     boolean doubleBackToExitPressedOnce = false;
@@ -84,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
     private String guestname = "";
     public static String guestusername = "guest";
-    public static String guestemail = "guest@tuvantuyensinh.ctu.edu.vn";
+    public static String guestemail = "guest_0000@tuvantuyensinh.ctu.edu.vn";
     public static String guestpassword = "password";
+
+    public static String NGANH = "";
     @Override
     protected void onStart() {
         super.onStart();
@@ -100,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null){
             UID = firebaseUser.getUid();
-            Log.d("USER", UID+"");
             navigationView.getMenu().findItem(R.id.item5).setVisible(false);
             navigationView.getMenu().findItem(R.id.item6).setVisible(true);
             profile_layout.setVisibility(View.VISIBLE);
@@ -274,28 +275,23 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        // close drawer when item is tapped
-                        mDrawerLayout.closeDrawers();
-
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
+//                        menuItem.setChecked(true);
                         switch (menuItem.getItemId()){
                             case R.id.item1:
                                 GotoFragment(new HomeFragment());
+                                mDrawerLayout.closeDrawers();
                                 break;
-                            case R.id.item3:
-                                GotoFragment(new VuaLamVuaHocFragment());
-                                break;
-                            case R.id.item4:
-                                GotoFragment(new SauDaiHocFragment());
+                            case R.id.item2:
+                                popupMenu();
                                 break;
                             case R.id.item5:
                                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.item6:
+                                mDrawerLayout.closeDrawers();
                                 Log.d("TAG", "user: "+guestusername);
                                 if (guestusername.contains("guest_")) {
                                     DeleteUser(guestemail, guestpassword);
@@ -314,32 +310,9 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             default:
                         }
-                        adapterView.setSelection(0);
                         return true;
                     }
                 });
-
-        Spinner spinner = (Spinner) navigationView.getMenu().findItem(R.id.item2).getActionView();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.daihocchinhquy, android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 1:
-                        GotoFragment(new ThongTinTuyenSinhFragment());
-                        mDrawerLayout.closeDrawers();
-                        break;
-                    default:
-                        mDrawerLayout.closeDrawers();
-                }
-                adapterView = parent;
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
 
         if (findViewById(R.id.fragment_container) != null) {
 
@@ -444,6 +417,55 @@ public class MainActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
+    }
+
+    public void popupMenu(){
+        PopupMenu popup = new PopupMenu(MainActivity.this, navigationView.findViewById(R.id.item2));
+        popup.getMenuInflater().inflate(R.menu.nganh, popup.getMenu());
+        popup.show();
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item2) {
+                mDrawerLayout.closeDrawers();
+                switch (item2.getItemId()) {
+                    case R.id.cntt:
+                        GotoFragment(new CNTTFragment());
+                        NGANH = "cntt";
+                        break;
+                    case R.id.kinhdoanhnongnghiep:
+                        GotoFragment(new KDNNFragment());
+                        NGANH = "kdnn";
+                        break;
+                    case R.id.kinhtenongnghiep:
+                        GotoFragment(new KTNNFragment());
+                        NGANH = "ktnn";
+                        break;
+                    case R.id.kythuatxaydung:
+                        GotoFragment(new KTXDFragment());
+                        NGANH = "ktxd";
+                        break;
+                    case R.id.luathanhchinh:
+                        GotoFragment(new LHCFragment());
+                        NGANH = "lhc";
+                        break;
+                    case R.id.ngonnguanh:
+                        GotoFragment(new NNAFragment());
+                        NGANH = "nna";
+                        break;
+                    case R.id.quantrikinhdoanh:
+                        GotoFragment(new QTKDFragment());
+                        NGANH = "qtkd";
+                        break;
+                    case R.id.vietnamhoc:
+                        GotoFragment(new VNHFragment());
+                        NGANH = "vnh";
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     //    @Override

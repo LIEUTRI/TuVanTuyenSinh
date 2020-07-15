@@ -52,9 +52,7 @@ public class QAActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
     FirebaseAuth mAuth;
-    String adminUID = "qqMO8UwdW1YSyIwQrjqroTWZn6s2", currentUID;
-    String adminEmail = "admin@ctu.edu.vn";
-    String adminPassword = "123456";
+    String adminUID = "qqMO8UwdW1YSyIwQrjqroTWZn6s2";
 
     MessageAdapter messageAdapter;
     List<Chat> chats;
@@ -127,7 +125,8 @@ public class QAActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
                     if (user != null){
-                        profile_fullname.setText(user.getFullname());
+                        fullname = user.getFullname();
+                        profile_fullname.setText(fullname);
                         if (user.getImageURL().equals("default")){
                             profile_image.setImageResource(R.drawable.user);
                         } else {
@@ -233,14 +232,17 @@ public class QAActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chats.clear();
+                if (Objects.requireNonNull(snapshot.getValue(Chat.class)).getMessage() == null){
+                    Chat chat = new Chat();
+                    chat.setSender(adminUID);
+                    chat.setReceiver(userid);
+                    chat.setMessage("Chào "+fullname+", em thắc mắc về vấn đề gì?");
+                    chats.add(chat);
+                    Log.d("TAG", adminUID +", "+myid+" | "+ chat.getMessage());
+                }
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Chat chat = dataSnapshot.getValue(Chat.class);
-                    assert chat != null;
-                    if (chat.getMessage() == null){
-                        chat.setSender(userid);
-                        chat.setReceiver(myid);
-                        chat.setMessage("Chào "+fullname+", em thắc mắc về vấn đề gì?");
-                    }
+
                     if (chat.getReceiver().equals(userid) && chat.getSender().equals(myid) ||
                             chat.getReceiver().equals(myid) && chat.getSender().equals(userid)){
                         chats.add(chat);

@@ -54,7 +54,7 @@
                     android:layout_marginStart="10dp"
                     android:textColor="#fff"
                     android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-light"
                     android:visibility="visible"/>
             </LinearLayout>
