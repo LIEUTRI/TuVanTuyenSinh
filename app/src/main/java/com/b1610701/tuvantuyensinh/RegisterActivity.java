@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -129,7 +130,11 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, getResources().getString(R.string.account_exist), Toast.LENGTH_SHORT).show();
+                            if (Objects.equals(Objects.requireNonNull(task.getException()).getMessage(), "The email address is already in use by another account.")){
+                                Toast.makeText(RegisterActivity.this, getResources().getString(R.string.account_exist), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Đăng ký thất bại!\nERROR: "+task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
                             updateUI(null);
                         }
                     }

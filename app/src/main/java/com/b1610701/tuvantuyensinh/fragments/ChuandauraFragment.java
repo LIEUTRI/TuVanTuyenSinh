@@ -67,7 +67,7 @@ public class ChuandauraFragment extends Fragment {
             default: URL = "http://www.lieutri.tk/";
         }
 
-        progDailog = ProgressDialog.show(getActivity(), "Loading","Please wait...", true);
+        progDailog = ProgressDialog.show(getActivity(), "Đang tải","Vui lòng đợi...", true);
         progDailog.setCancelable(false);
 
         webView.getSettings().setJavaScriptEnabled(true);

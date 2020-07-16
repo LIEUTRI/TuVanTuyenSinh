@@ -91,7 +91,7 @@ public class KDNNFragment extends Fragment {
             txt_noidung_noilamviec.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
         }
 
-        progDailog = ProgressDialog.show(getActivity(), "Loading","Please wait...", true);
+        progDailog = ProgressDialog.show(getActivity(), "Đang tải","Vui lòng đợi...", true);
         progDailog.setCancelable(false);
 
         CookieManager.getInstance().setAcceptCookie(true);

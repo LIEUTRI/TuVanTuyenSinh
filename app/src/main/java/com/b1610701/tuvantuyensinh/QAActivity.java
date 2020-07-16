@@ -20,6 +20,8 @@ import com.b1610701.tuvantuyensinh.Adapter.MessageAdapter;
 import com.b1610701.tuvantuyensinh.model.Chat;
 import com.b1610701.tuvantuyensinh.model.User;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -130,7 +132,11 @@ public class QAActivity extends AppCompatActivity {
                         if (user.getImageURL().equals("default")){
                             profile_image.setImageResource(R.drawable.user);
                         } else {
-                            Glide.with(QAActivity.this).load(user.getImageURL()).into(profile_image);
+                            if (!QAActivity.this.isDestroyed()){
+                                Glide.with(QAActivity.this)
+                                        .load(user.getImageURL())
+                                        .into(profile_image);
+                            }
                         }
                         readMessage(UID, adminUID, user.getImageURL());
                     }

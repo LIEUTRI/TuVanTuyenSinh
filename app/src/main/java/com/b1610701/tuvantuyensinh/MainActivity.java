@@ -1,6 +1,7 @@
 package com.b1610701.tuvantuyensinh;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -9,9 +10,12 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,11 +28,13 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +54,13 @@ import com.b1610701.tuvantuyensinh.fragments.UserFragment;
 import com.b1610701.tuvantuyensinh.fragments.VNHFragment;
 import com.b1610701.tuvantuyensinh.model.User;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.module.AppGlideModule;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthCredential;
@@ -61,7 +73,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -70,11 +87,12 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
     private View headerView;
-    LinearLayout profile_layout;
+    RelativeLayout profile_layout;
     CircleImageView profile_image;
     TextView profile_fullname;
     TextView profile_username;
     LinearLayout q_a_layout;
+    ImageView btn_change_image;
     private String UID;
     boolean isAdmin = false;
 
@@ -86,8 +104,12 @@ public class MainActivity extends AppCompatActivity {
     public static String guestusername = "guest";
     public static String guestemail = "guest_0000@tuvantuyensinh.ctu.edu.vn";
     public static String guestpassword = "password";
-
     public static String NGANH = "";
+
+    StorageReference storageReference;
+    private static final int IMAGE_REQUEST = 1;
+    private Uri imageUri;
+    private StorageTask uploadTask;
     @Override
     protected void onStart() {
         super.onStart();
@@ -98,6 +120,14 @@ public class MainActivity extends AppCompatActivity {
         profile_image = headerView.findViewById(R.id.profile_image);
         profile_fullname = headerView.findViewById(R.id.profile_fullname);
         profile_username = headerView.findViewById(R.id.profile_username);
+        btn_change_image = headerView.findViewById(R.id.iv_change_image);
+
+        btn_change_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImage();
+            }
+        });
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null){
@@ -133,7 +163,13 @@ public class MainActivity extends AppCompatActivity {
                             if (user.getImageURL().equals("default")){
                                 profile_image.setImageResource(R.drawable.user);
                             } else {
-                                Glide.with(MainActivity.this).load(user.getImageURL()).into(profile_image);
+                                if (!MainActivity.this.isDestroyed()){
+                                    Glide.with(MainActivity.this)
+                                            .load(user.getImageURL())
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+                                            .into(profile_image);
+                                }
                             }
                             if (user.getEmail().contains("@ctu.edu.vn") || user.getEmail().contains("@cit.ctu.edu.vn")) isAdmin = true;
                         }
@@ -160,11 +196,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageView btnMenu = findViewById(R.id.btnMenu);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final ActionBar actionbar = getSupportActionBar();
         assert actionbar != null;
         actionbar.setDisplayShowTitleEnabled(false);
+
+        storageReference = FirebaseStorage.getInstance().getReference("Uploads");
 
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -332,6 +371,75 @@ public class MainActivity extends AppCompatActivity {
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, firstFragment).commit();
+        }
+    }
+
+    private void openImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE_REQUEST);
+    }
+    private String getFileExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+    private void uploadImage(){
+        final ProgressDialog pd = new ProgressDialog(MainActivity.this);
+        pd.setMessage(getResources().getString(R.string.uploading));
+        pd.show();
+        if (imageUri != null){
+            final StorageReference fileReference = storageReference.child(System.currentTimeMillis() +"."+ getFileExtension(imageUri));
+            uploadTask = fileReference.putFile(imageUri);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()){
+                        throw task.getException();
+                    }
+                    return fileReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()){
+                        Uri downloadUri = task.getResult();
+                        String mUri = downloadUri.toString();
+
+                        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("imageURL", mUri);
+                        reference.updateChildren(hashMap);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                    pd.dismiss();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    pd.dismiss();
+                }
+            });
+        } else {
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.noimageselected), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
+            imageUri = data.getData();
+
+            if (uploadTask != null && uploadTask.isInProgress()){
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.uploadInProgress), Toast.LENGTH_SHORT).show();
+            } else {
+                uploadImage();
+            }
         }
     }
 
