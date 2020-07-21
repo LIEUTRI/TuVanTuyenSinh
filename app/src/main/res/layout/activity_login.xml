@@ -26,6 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
+                android:imeOptions="actionNext"
+                android:background="@drawable/edittext_style"
                 android:id="@+id/email"
                 android:inputType="textEmailAddress"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -37,9 +39,10 @@
             android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/password"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:layout_marginBottom="8dp"
                 android:inputType="textPassword"
+                android:background="@drawable/edittext_style"
                 android:hint="@string/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -53,6 +56,18 @@
             android:textSize="20sp"
             android:fontFamily="sans-serif-thin"
             android:id="@+id/btn_login"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:fontFamily="sans-serif-condensed-light"
+            android:textColor="#BF6600"
+            android:id="@+id/forgot_password"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

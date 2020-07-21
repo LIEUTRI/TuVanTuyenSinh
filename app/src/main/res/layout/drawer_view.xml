@@ -10,7 +10,15 @@
         <item
             android:id="@+id/item2"
             android:icon="@drawable/ic_arrow_down"
-            android:title="Giới thiệu ngành" />
+            android:title="Giới thiệu ngành..." />
+        <item
+            android:id="@+id/item3"
+            android:icon="@drawable/registration"
+            android:title="Cách đăng ký xét tuyển"/>
+        <item
+            android:id="@+id/item4"
+            android:icon="@drawable/question"
+            android:title="Câu hỏi thường gặp"/>
         <item
             android:id="@+id/item5"
             android:icon="@drawable/ic_login"

@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.b1610701.tuvantuyensinh.fragments.CNTTFragment;
@@ -50,14 +51,13 @@ import com.b1610701.tuvantuyensinh.fragments.KTXDFragment;
 import com.b1610701.tuvantuyensinh.fragments.LHCFragment;
 import com.b1610701.tuvantuyensinh.fragments.NNAFragment;
 import com.b1610701.tuvantuyensinh.fragments.QTKDFragment;
+import com.b1610701.tuvantuyensinh.fragments.QuestionFragment;
+import com.b1610701.tuvantuyensinh.fragments.RegGuideFragment;
 import com.b1610701.tuvantuyensinh.fragments.UserFragment;
 import com.b1610701.tuvantuyensinh.fragments.VNHFragment;
 import com.b1610701.tuvantuyensinh.model.User;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.module.AppGlideModule;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
     public static String guestemail = "guest_0000@tuvantuyensinh.ctu.edu.vn";
     public static String guestpassword = "password";
     public static String NGANH = "";
+    public static String adminUid;
+    private String image_url = "";
 
     StorageReference storageReference;
     private static final int IMAGE_REQUEST = 1;
@@ -203,6 +205,10 @@ public class MainActivity extends AppCompatActivity {
         assert actionbar != null;
         actionbar.setDisplayShowTitleEnabled(false);
 
+        //Get Admin Uid
+        GetUserInfo admin = new GetUserInfo("Users", "admin");
+        new Thread(admin).start();
+
         storageReference = FirebaseStorage.getInstance().getReference("Uploads");
 
         btnMenu.setOnClickListener(new View.OnClickListener() {
@@ -238,9 +244,13 @@ public class MainActivity extends AppCompatActivity {
                     builder.setTitle("Q&A System");
                     builder.setMessage(getResources().getString(R.string.whatshouldwecallyou));
                     // Set up the input
-                    final EditText input = new EditText(getApplicationContext());
+                    final EditText input = new EditText(MainActivity.this);
                     // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    input.setTextColor(Color.WHITE);
+                    input.setHint(getResources().getString(R.string.yourname));
+                    input.setHintTextColor(Color.argb(60,232,232,232));
+                    input.setPadding(20,0,20,25);
                     builder.setView(input);
 
                     // Set up the buttons
@@ -319,11 +329,19 @@ public class MainActivity extends AppCompatActivity {
 //                        menuItem.setChecked(true);
                         switch (menuItem.getItemId()){
                             case R.id.item1:
-                                GotoFragment(new HomeFragment());
+                                GotoFragment(new HomeFragment(), "HOME");
                                 mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.item2:
                                 popupMenu();
+                                break;
+                            case R.id.item3:
+                                GotoFragment(new RegGuideFragment(), "REGGUIDE");
+                                mDrawerLayout.closeDrawers();
+                                break;
+                            case R.id.item4:
+                                GotoFragment(new QuestionFragment(), "?");
+                                mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.item5:
                                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -370,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
             firstFragment.setArguments(getIntent().getExtras());
 
             // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, firstFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, firstFragment, "HOME").commit();
         }
     }
 
@@ -411,6 +429,9 @@ public class MainActivity extends AppCompatActivity {
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("imageURL", mUri);
                         reference.updateChildren(hashMap);
+
+                        finish();
+                        startActivity(getIntent());
                     } else {
                         Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                     }
@@ -491,12 +512,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void GotoFragment(Fragment fragment){
+    private void GotoFragment(Fragment fragment, String tag){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.fragment_container, fragment);
+        transaction.replace(R.id.fragment_container, fragment, tag);
         transaction.addToBackStack(null);
 
         // Commit the transaction
@@ -513,18 +534,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, getResources().getString(R.string.exit_confirm), Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
+        Fragment homeFragment = getSupportFragmentManager().findFragmentByTag("HOME");
+        if (homeFragment != null && homeFragment.isVisible()) {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
             }
-        }, 2000);
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, getResources().getString(R.string.exit_confirm), Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
+        } else {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
     }
 
     public void popupMenu(){
@@ -537,35 +563,35 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.closeDrawers();
                 switch (item2.getItemId()) {
                     case R.id.cntt:
-                        GotoFragment(new CNTTFragment());
+                        GotoFragment(new CNTTFragment(), "CNTT");
                         NGANH = "cntt";
                         break;
                     case R.id.kinhdoanhnongnghiep:
-                        GotoFragment(new KDNNFragment());
+                        GotoFragment(new KDNNFragment(), "KDNN");
                         NGANH = "kdnn";
                         break;
                     case R.id.kinhtenongnghiep:
-                        GotoFragment(new KTNNFragment());
+                        GotoFragment(new KTNNFragment(), "KTNN");
                         NGANH = "ktnn";
                         break;
                     case R.id.kythuatxaydung:
-                        GotoFragment(new KTXDFragment());
+                        GotoFragment(new KTXDFragment(), "KTXD");
                         NGANH = "ktxd";
                         break;
                     case R.id.luathanhchinh:
-                        GotoFragment(new LHCFragment());
+                        GotoFragment(new LHCFragment(), "LHC");
                         NGANH = "lhc";
                         break;
                     case R.id.ngonnguanh:
-                        GotoFragment(new NNAFragment());
+                        GotoFragment(new NNAFragment(), "NNA");
                         NGANH = "nna";
                         break;
                     case R.id.quantrikinhdoanh:
-                        GotoFragment(new QTKDFragment());
+                        GotoFragment(new QTKDFragment(), "QTKD");
                         NGANH = "qtkd";
                         break;
                     case R.id.vietnamhoc:
-                        GotoFragment(new VNHFragment());
+                        GotoFragment(new VNHFragment(), "VNH");
                         NGANH = "vnh";
                         break;
                     default:

@@ -23,8 +23,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/fullname"
+                android:background="@drawable/edittext_style"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
+                android:inputType="text"
+                android:imeOptions="actionNext"
                 android:id="@+id/fullname"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
@@ -34,9 +37,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
+                android:inputType="textNoSuggestions"
+                android:background="@drawable/edittext_style"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:id="@+id/username"/>
+                android:id="@+id/username"
+                android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -45,10 +51,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
+                android:background="@drawable/edittext_style"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:id="@+id/email"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutTextInput"
@@ -61,9 +69,9 @@
             <EditText
                 android:id="@+id/password"
                 android:imeOptions="actionNext"
-                android:layout_marginBottom="8dp"
                 android:inputType="textPassword"
                 android:hint="@string/password"
+                android:background="@drawable/edittext_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -77,10 +85,11 @@
             android:layout_marginEnd="40dp">
             <EditText
                 android:id="@+id/re_password"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:layout_marginBottom="8dp"
                 android:inputType="textPassword"
                 android:hint="@string/re_password"
+                android:background="@drawable/edittext_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>

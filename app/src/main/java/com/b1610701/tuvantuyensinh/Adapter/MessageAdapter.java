@@ -56,7 +56,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
         Chat chat = chats.get(position);
-        Log.d("test", "msg: "+chat.getMessage()+"S: "+chat.getSender()+" R: "+chat.getReceiver());
         holder.show_msg.setText(chat.getMessage());
         holder.show_msg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +90,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        assert firebaseUser != null;
         if (chats.get(position).getSender().equals(firebaseUser.getUid())){
             isRight = true;
             return MSG_TYPE_RIGHT;

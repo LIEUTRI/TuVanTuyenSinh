@@ -98,14 +98,15 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                assert user != null;
-                profile_username.setText(user.getUsername());
-                if (user.getImageURL().equals("default")){
-                    profile_image.setImageResource(R.drawable.user);
-                } else {
-                    Glide.with(MessageActivity.this).load(user.getImageURL()).into(profile_image);
+                if (user != null) {
+                    profile_username.setText(user.getUsername());
+                    if (user.getImageURL().equals("default")){
+                        profile_image.setImageResource(R.drawable.user);
+                    } else {
+                        Glide.with(MessageActivity.this).load(user.getImageURL()).into(profile_image);
+                    }
+                    readMessage(firebaseUser.getUid(), UID, user.getImageURL());
                 }
-                readMessage(firebaseUser.getUid(), UID, user.getImageURL());
             }
 
             @Override

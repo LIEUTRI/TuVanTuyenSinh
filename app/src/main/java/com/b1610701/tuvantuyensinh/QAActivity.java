@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Contacts;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -20,13 +19,9 @@ import com.b1610701.tuvantuyensinh.Adapter.MessageAdapter;
 import com.b1610701.tuvantuyensinh.model.Chat;
 import com.b1610701.tuvantuyensinh.model.User;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -54,7 +49,7 @@ public class QAActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
     FirebaseAuth mAuth;
-    String adminUID = "qqMO8UwdW1YSyIwQrjqroTWZn6s2";
+    String adminUID = MainActivity.adminUid;
 
     MessageAdapter messageAdapter;
     List<Chat> chats;
@@ -66,16 +61,14 @@ public class QAActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        if (isGuest){
-
-        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_q_a);
+
+        Log.d("admin", "-> "+adminUID);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -238,11 +231,11 @@ public class QAActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chats.clear();
-                if (Objects.requireNonNull(snapshot.getValue(Chat.class)).getMessage() == null){
+                if (snapshot.getValue(Chat.class) != null && snapshot.getValue(Chat.class).getMessage() == null){
                     Chat chat = new Chat();
                     chat.setSender(adminUID);
                     chat.setReceiver(userid);
-                    chat.setMessage("Chào "+fullname+", em thắc mắc về vấn đề gì?");
+                    chat.setMessage("Chào "+fullname+", bạn thắc mắc về vấn đề gì?");
                     chats.add(chat);
                     Log.d("TAG", adminUID +", "+myid+" | "+ chat.getMessage());
                 }

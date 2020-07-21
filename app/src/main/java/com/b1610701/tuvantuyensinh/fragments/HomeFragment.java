@@ -90,7 +90,6 @@ public class HomeFragment extends Fragment {
                 int tt = 1;
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Nganh nganh = dataSnapshot.getValue(Nganh.class);
-                    TableRow tableRow = new TableRow(getContext());
                     txt_TT.append(tt+"\n"); tt++;
                     txt_MaNganh.append(nganh.getMaNganh()+"\n");
                     txt_TenNganh.append(nganh.getTenNganh()+"\n");

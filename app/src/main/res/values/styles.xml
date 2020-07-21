@@ -9,7 +9,9 @@
     <style name="SpinnerTheme" parent="android:Widget.Spinner">
         <item name="android:background">@drawable/bg_spinner</item>
     </style>
-    <style name="InputDialog" parent="Theme.AppCompat.Dialog">
-
+    <style name="InputDialog" parent="Theme.AppCompat.DayNight">
+        <item name="android:textColor">#00FF00</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>

@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText et_email, et_password;
     Button btn_login;
-    TextView txt_gotoregister, txt_gotohome;
+    TextView txt_gotoregister, txt_gotohome, btn_forgot_password;
     Boolean QA;
     String UID;
 
@@ -46,6 +46,14 @@ public class LoginActivity extends AppCompatActivity {
         btn_login = findViewById(R.id.btn_login);
         txt_gotoregister = findViewById(R.id.gotoregister);
         txt_gotohome = findViewById(R.id.gotohome);
+        btn_forgot_password = findViewById(R.id.forgot_password);
+
+        btn_forgot_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
+            }
+        });
 
         try {
             Intent intent;
