@@ -5,6 +5,8 @@ import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +72,7 @@ public class HomeFragment extends Fragment {
         txt_year_3 = view.findViewById(R.id.title_year_3);
         txt_ghichu = view.findViewById(R.id.txt_ghichu);
         txt_footer = view.findViewById(R.id.txt_footer);
+
 
         txt_title.setText(Html.fromHtml(getResources().getString(R.string.home_title)));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

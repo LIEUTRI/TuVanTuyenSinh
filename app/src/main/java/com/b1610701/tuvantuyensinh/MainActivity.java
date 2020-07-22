@@ -247,9 +247,9 @@ public class MainActivity extends AppCompatActivity {
                     final EditText input = new EditText(MainActivity.this);
                     // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
-                    input.setTextColor(Color.WHITE);
+                    input.setTextColor(Color.BLACK);
                     input.setHint(getResources().getString(R.string.yourname));
-                    input.setHintTextColor(Color.argb(60,232,232,232));
+                    input.setHintTextColor(Color.argb(90,166,166,166));
                     input.setPadding(20,0,20,25);
                     builder.setView(input);
 
