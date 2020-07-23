@@ -215,4 +215,5 @@
     <string name="facebook_app_id">296855914888628</string>
     <string name="fb_login_protocol_scheme">fb296855914888628</string>
     <string name="or">-OR-</string>
+    <string name="findingyou">Chờ xí! Đang tìm vị trí của bạn…</string>
 </resources>

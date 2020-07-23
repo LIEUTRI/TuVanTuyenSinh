@@ -6,14 +6,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -49,6 +52,7 @@ import com.b1610701.tuvantuyensinh.fragments.KDNNFragment;
 import com.b1610701.tuvantuyensinh.fragments.KTNNFragment;
 import com.b1610701.tuvantuyensinh.fragments.KTXDFragment;
 import com.b1610701.tuvantuyensinh.fragments.LHCFragment;
+import com.b1610701.tuvantuyensinh.fragments.MapsFragment;
 import com.b1610701.tuvantuyensinh.fragments.NNAFragment;
 import com.b1610701.tuvantuyensinh.fragments.QTKDFragment;
 import com.b1610701.tuvantuyensinh.fragments.QuestionFragment;
@@ -80,7 +84,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -117,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int IMAGE_REQUEST = 1;
     private Uri imageUri;
     private StorageTask uploadTask;
+
+    static boolean granted = false;
     @Override
     protected void onStart() {
         super.onStart();
@@ -206,6 +211,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    granted = true;
+                } else {
+                    granted = false;
+                    Toast.makeText(MainActivity.this, "Permission denied to access your location!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -221,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
         //Get Admin Uid
         GetUserInfo admin = new GetUserInfo("Users", "admin", "default");
         new Thread(admin).start();
+
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
         storageReference = FirebaseStorage.getInstance().getReference("Uploads");
 
@@ -382,6 +405,14 @@ public class MainActivity extends AppCompatActivity {
                                     startActivity(getIntent());
                                 }
                                 break;
+                            case R.id.item7:
+                                if (granted){
+                                    GotoFragment(new MapsFragment(), "MAPS");
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Can't access your location", Toast.LENGTH_SHORT).show();
+                                }
+                                mDrawerLayout.closeDrawers();
+                                break;
                             default:
                         }
                         return true;
@@ -398,6 +429,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Create a new Fragment to be placed in the activity layout
+//            HomeFragment firstFragment = new HomeFragment();
+
             HomeFragment firstFragment = new HomeFragment();
 
             // In case this activity was started with special instructions from an

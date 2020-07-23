@@ -20,6 +20,10 @@
             android:icon="@drawable/question"
             android:title="Câu hỏi thường gặp"/>
         <item
+            android:id="@+id/item7"
+            android:icon="@drawable/direction"
+            android:title="Chỉ đường" />
+        <item
             android:id="@+id/item5"
             android:icon="@drawable/ic_login"
             android:title="ĐĂNG NHẬP" />
