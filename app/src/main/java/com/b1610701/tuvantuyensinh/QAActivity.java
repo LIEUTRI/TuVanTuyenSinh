@@ -68,8 +68,6 @@ public class QAActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_q_a);
 
-        Log.d("admin", "-> "+adminUID);
-
         mAuth = FirebaseAuth.getInstance();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -109,8 +107,8 @@ public class QAActivity extends AppCompatActivity {
             createGuestAccount();
             intent = getIntent();
             fullname = intent.getStringExtra("FULLNAME");
-            profile_fullname.setText(fullname);
-            profile_image.setImageResource(R.drawable.user);
+            profile_fullname.setText(getResources().getString(R.string.app_name));
+            profile_image.setImageResource(R.drawable.ctulogo);
             isGuest = true;
         } else {
             firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -121,13 +119,13 @@ public class QAActivity extends AppCompatActivity {
                     User user = snapshot.getValue(User.class);
                     if (user != null){
                         fullname = user.getFullname();
-                        profile_fullname.setText(fullname);
+                        profile_fullname.setText(getResources().getString(R.string.app_name));
                         if (user.getImageURL().equals("default")){
                             profile_image.setImageResource(R.drawable.user);
                         } else {
                             if (!QAActivity.this.isDestroyed()){
                                 Glide.with(QAActivity.this)
-                                        .load(user.getImageURL())
+                                        .load(MainActivity.adminImageUrl)
                                         .into(profile_image);
                             }
                         }
@@ -256,20 +254,5 @@ public class QAActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void getUserID(String email, String password){
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            adminUID = auth.getUid();
-                        } else {
-                            Toast.makeText(QAActivity.this, getResources().getString(R.string.authfailed), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
     }
 }

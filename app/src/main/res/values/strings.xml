@@ -212,4 +212,7 @@
     <string name="question1_answer">Không cần.</string>
     <string name="question3">Xét học bạ vào sư phạm?</string>
     <string name="question3_answer"><![CDATA[<span style=\"color: #008BD6\">Mời bạn xem thông tin tại</span><br><i><span style=\"color: #ee82ee\">https://tuyensinh.ctu.edu.vn/phuong-thuc-xet-tuyen/947-phuong-thuc-6.html</span></i>]]></string>
+    <string name="facebook_app_id">296855914888628</string>
+    <string name="fb_login_protocol_scheme">fb296855914888628</string>
+    <string name="or">-OR-</string>
 </resources>

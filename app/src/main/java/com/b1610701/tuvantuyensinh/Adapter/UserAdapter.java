@@ -91,14 +91,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
     private void lastMessage(final String userid, final TextView last_msg){
         theLastMessage = "default";
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Chat chat = dataSnapshot.getValue(Chat.class);
-                    if (chat.getSender().equals(userid) && chat.getReceiver().equals(MainActivity.adminUid)){
+                    if (chat != null && (chat.getSender().equals(userid) && chat.getReceiver().equals(MainActivity.adminUid) ||
+                            chat.getSender().equals(MainActivity.adminUid) && chat.getReceiver().equals(userid))) {
                         theLastMessage = chat.getMessage();
                     }
                 }

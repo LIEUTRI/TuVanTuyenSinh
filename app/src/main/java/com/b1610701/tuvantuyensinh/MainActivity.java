@@ -58,6 +58,8 @@ import com.b1610701.tuvantuyensinh.fragments.VNHFragment;
 import com.b1610701.tuvantuyensinh.model.User;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -78,6 +80,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout q_a_layout;
     ImageView btn_change_image;
     private String UID;
-    boolean isAdmin = false;
+    static boolean isAdmin = false;
 
     boolean doubleBackToExitPressedOnce = false;
     FirebaseUser firebaseUser;
@@ -106,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
     public static String guestpassword = "password";
     public static String NGANH = "";
     public static String adminUid;
-    private String image_url = "";
+    public static String adminImageUrl;
+    static public String currentuser_image_url = "default";
+    private String username = "";
 
     StorageReference storageReference;
     private static final int IMAGE_REQUEST = 1;
@@ -161,6 +166,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                             profile_username.setText(user.getUsername()+"");
                             profile_fullname.setText(user.getFullname()+"");
+                            username = user.getUsername();
+
+                            currentuser_image_url = user.getImageURL();
 
                             if (user.getImageURL().equals("default")){
                                 profile_image.setImageResource(R.drawable.user);
@@ -173,7 +181,12 @@ public class MainActivity extends AppCompatActivity {
                                             .into(profile_image);
                                 }
                             }
-                            if (user.getEmail().contains("@ctu.edu.vn") || user.getEmail().contains("@cit.ctu.edu.vn")) isAdmin = true;
+//                            if (user.getEmail().contains("@ctu.edu.vn") || user.getEmail().contains("@cit.ctu.edu.vn")) isAdmin = true;
+                            if (username.equals("admin")) {
+                                isAdmin = true;
+                            } else {
+                                isAdmin = false;
+                            }
                         }
                     } else {
                         Log.d("TAG", "user is null");
@@ -206,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setDisplayShowTitleEnabled(false);
 
         //Get Admin Uid
-        GetUserInfo admin = new GetUserInfo("Users", "admin");
+        GetUserInfo admin = new GetUserInfo("Users", "admin", "default");
         new Thread(admin).start();
 
         storageReference = FirebaseStorage.getInstance().getReference("Uploads");
@@ -227,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (firebaseUser != null){
                     if (isAdmin){
+                        isAdmin = false;
                         Fragment userFragment = new UserFragment();
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, userFragment);
@@ -348,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
                                 mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.item6:
+                                username = "";
                                 mDrawerLayout.closeDrawers();
                                 Log.d("TAG", "user: "+guestusername);
                                 if (guestusername.contains("guest_")) {
@@ -357,6 +372,7 @@ public class MainActivity extends AppCompatActivity {
                                     profile_layout.setVisibility(View.INVISIBLE);
                                     Toast.makeText(MainActivity.this, getResources().getString(R.string.loggingout), Toast.LENGTH_SHORT).show();
                                 } else {
+                                    LoginManager.getInstance().logOut();
                                     FirebaseAuth.getInstance().signOut();
                                     navigationView.getMenu().findItem(R.id.item5).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.item6).setVisible(false);
@@ -365,6 +381,7 @@ public class MainActivity extends AppCompatActivity {
                                     finish();
                                     startActivity(getIntent());
                                 }
+                                break;
                             default:
                         }
                         return true;

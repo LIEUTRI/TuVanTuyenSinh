@@ -14,11 +14,13 @@ public class GetUserInfo implements Runnable {
     private String uid;
     private String path;
     private String username;
+    private String imageURL;
     DatabaseReference reference;
     public GetUserInfo(){ }
-    public GetUserInfo(String path, String username){
+    public GetUserInfo(String path, String username, String imageURL){
         this.path = path;
         this.username = username;
+        this.imageURL = imageURL;
     }
 
     @Override
@@ -31,7 +33,9 @@ public class GetUserInfo implements Runnable {
                     User user = dataSnapshot.getValue(User.class);
                     if (user != null && user.getUsername().equals(username)) {
                         uid = user.getId();
+                        imageURL = user.getImageURL();
                         MainActivity.adminUid = uid;
+                        MainActivity.adminImageUrl = imageURL;
                     }
                 }
             }
@@ -45,8 +49,14 @@ public class GetUserInfo implements Runnable {
     public String getUid(){
         return this.uid;
     }
+    public String getImageURL(){
+        return this.imageURL;
+    }
     public void setPath(String path){
         this.path = path;
+    }
+    public void setImageURL(String imageURL){
+        this.imageURL = imageURL;
     }
     public void setUsername(String username){
         this.username = username;

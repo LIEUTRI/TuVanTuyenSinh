@@ -18,6 +18,7 @@ import com.b1610701.tuvantuyensinh.Adapter.MessageAdapter;
 import com.b1610701.tuvantuyensinh.model.Chat;
 import com.b1610701.tuvantuyensinh.model.User;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.common.api.Api;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,7 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MessageActivity extends AppCompatActivity {
 
     CircleImageView profile_image;
-    TextView profile_username;
+    TextView profile_fullname;
     ImageButton btn_send;
     EditText et_message;
 
@@ -72,7 +73,7 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         profile_image = findViewById(R.id.profile_image);
-        profile_username = findViewById(R.id.profile_username);
+        profile_fullname = findViewById(R.id.profile_fullname);
         btn_send = findViewById(R.id.btn_send);
         et_message = findViewById(R.id.et_message);
 
@@ -99,11 +100,13 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 if (user != null) {
-                    profile_username.setText(user.getUsername());
+                    profile_fullname.setText(user.getFullname());
                     if (user.getImageURL().equals("default")){
                         profile_image.setImageResource(R.drawable.user);
                     } else {
-                        Glide.with(MessageActivity.this).load(user.getImageURL()).into(profile_image);
+                        Glide.with(MessageActivity.this)
+                                .load(user.getImageURL())
+                                .into(profile_image);
                     }
                     readMessage(firebaseUser.getUid(), UID, user.getImageURL());
                 }
