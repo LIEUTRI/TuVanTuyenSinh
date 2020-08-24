@@ -62,7 +62,6 @@ import com.b1610701.tuvantuyensinh.fragments.VNHFragment;
 import com.b1610701.tuvantuyensinh.model.User;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -186,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
                                             .into(profile_image);
                                 }
                             }
-//                            if (user.getEmail().contains("@ctu.edu.vn") || user.getEmail().contains("@cit.ctu.edu.vn")) isAdmin = true;
                             if (username.equals("admin")) {
                                 isAdmin = true;
                             } else {
@@ -362,8 +360,6 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        // set item as selected to persist highlight
-//                        menuItem.setChecked(true);
                         switch (menuItem.getItemId()){
                             case R.id.item1:
                                 GotoFragment(new HomeFragment(), "HOME");

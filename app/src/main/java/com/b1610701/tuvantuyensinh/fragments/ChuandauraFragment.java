@@ -41,30 +41,30 @@ public class ChuandauraFragment extends Fragment {
 
         switch (MainActivity.NGANH){
             case "cntt":
-                URL = "http://www.lieutri.tk/congnghethongtin.html";
+                URL = "http://www.lieutri.ml/congnghethongtin.html";
                 break;
             case "kdnn":
-                URL = "http://www.lieutri.tk/kinhdoanhnongnghiep.html";
+                URL = "http://www.lieutri.ml/kinhdoanhnongnghiep.html";
                 break;
             case "ktnn":
-                URL = "http://www.lieutri.tk/kinhtenongnghiep.html";
+                URL = "http://www.lieutri.ml/kinhtenongnghiep.html";
                 break;
             case "ktxd":
-                URL = "http://www.lieutri.tk/kythuatxaydung.html";
+                URL = "http://www.lieutri.ml/kythuatxaydung.html";
                 break;
             case "lhc":
-                URL = "http://www.lieutri.tk/luat.html";
+                URL = "http://www.lieutri.ml/luat.html";
                 break;
             case "nna":
-                URL = "http://www.lieutri.tk/ngonnguanh.html";
+                URL = "http://www.lieutri.ml/ngonnguanh.html";
                 break;
             case "qtkd":
-                URL = "http://www.lieutri.tk/quantrikinhdoanh.html";
+                URL = "http://www.lieutri.ml/quantrikinhdoanh.html";
                 break;
             case "vnh":
-                URL = "http://www.lieutri.tk/vietnamhoc.html";
+                URL = "http://www.lieutri.ml/vietnamhoc.html";
                 break;
-            default: URL = "http://www.lieutri.tk/";
+            default: URL = "http://www.lieutri.ml/";
         }
 
         progDailog = ProgressDialog.show(getActivity(), "Đang tải","Vui lòng đợi...", true);

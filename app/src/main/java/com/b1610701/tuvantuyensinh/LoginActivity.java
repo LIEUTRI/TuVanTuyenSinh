@@ -256,15 +256,8 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
         if (user != null){
             Intent GotoMainActivity = new Intent(LoginActivity.this, MainActivity.class);
-            Intent GotoQAActivity = new Intent(LoginActivity.this, QAActivity.class);
-            GotoQAActivity.putExtra("UID", user.getUid());
             GotoMainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (QA){
-                startActivity(GotoQAActivity);
-            } else {
-                startActivity(GotoMainActivity);
-                finish();
-            }
+            startActivity(GotoMainActivity);
         }
     }
     @Override
